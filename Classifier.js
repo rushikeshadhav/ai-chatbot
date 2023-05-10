@@ -39,6 +39,7 @@ classifier.addDocument(
   "How do I use the .map() function in JavaScript?",
   "programming"
 );
+classifier.addDocument("Who is a frontend developer", "programming");
 
 // Non-programming questions
 classifier.addDocument("What is the capital of France?", "non-programming");
