@@ -20,13 +20,16 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+const conversationHistory = []
 app.post("/chat", async (req, res) => {
   const { message } = req.body;
 
+  const messages = [{role: "system", "content": "You are a programmer that only replies to programming prompts, if asked non programming questions you say sorry I only answer programming questions"},...conversationHistory,{ role: "user", content: message }]
   const result = await openaiClient.createChatCompletion({
     model: "gpt-3.5-turbo",
-    messages: [{"role": "system", "content": "You are a programmer that only replies to programming prompts, if asked non programming questions you say sorry I only answer programming questions"},{ role: "user", content: message }],
+    messages: messages,
   });
+  conversationHistory.push({role: "system", content: result.data.choices[0].message.content})
   res.json({
     message: result.data.choices[0].message.content,
   });
