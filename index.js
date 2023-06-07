@@ -16,8 +16,19 @@ const configuration = new Configuration({
 
 const openaiClient = new OpenAIApi(configuration);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+app.post("/form", (req, res) => {
+  const formData = req.body;
+  const botData = {
+    title: formData.title,
+    avatar: formData.avatar,
+    colors: {
+      primary: formData.field1,
+      secondary: formData.field2,
+      userTextBg: formData.field3,
+      textColor: formData.field4,
+    },
+  };
+  res.send(botData);
 });
 
 const conversationHistory = [];
