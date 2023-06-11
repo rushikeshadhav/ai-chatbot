@@ -28,7 +28,7 @@ app.post("/form", (req, res) => {
       textColor: formData.field4,
     },
   };
-  res.send(botData);
+  res.status(201).send(botData);
 });
 
 const conversationHistory = [];
@@ -44,17 +44,22 @@ app.post("/chat", async (req, res) => {
     ...conversationHistory,
     { role: "user", content: message },
   ];
-  const result = await openaiClient.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: messages,
-  });
-  conversationHistory.push({
-    role: "system",
-    content: result.data.choices[0].message.content,
-  });
-  res.json({
-    message: result.data.choices[0].message.content,
-  });
+  let result;
+  try {
+    result = await openaiClient.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: messages,
+    });
+    conversationHistory.push({
+      role: "system",
+      content: result.data.choices[0].message.content,
+    });
+    res.status(201).json({
+      message: result.data.choices[0].message.content,
+    });
+  } catch (error) {
+    res.status(400).send("Invalid API KEY");
+  }
 });
 
 app.listen(PORT, () => {
